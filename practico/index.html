@@ -23,17 +23,14 @@
     </a-scene>
 
     <script>
-        // Seleccionamos el marcador y el modelo
-        const marker = document.querySelector("#hiroMarker");
+        // Seleccionamos el modelo
         const model = document.querySelector("#gltfModel");
 
-        marker.addEventListener("markerFound", (event) => {
-            const intervalId = setInterval(() => {
-                const markerPosition = marker.object3D.position.length(); // Distancia del marcador a la cámara
-                const scaleFactor = Math.min(Math.max(markerPosition / 5, 0.1), 1); // Ajusta el tamaño según la distancia
-                model.setAttribute('scale', `${scaleFactor} ${scaleFactor} ${scaleFactor}`);
-            }, 100); // Actualiza cada 100ms
-            marker.addEventListener("markerLost", () => clearInterval(intervalId)); // Detiene cuando el marcador se pierde
+        // Escucha el evento de clic sobre el modelo
+        model.addEventListener('click', () => {
+            // Cambia el color del modelo aleatoriamente
+            const randomColor = '#' + Math.floor(Math.random()*16777215).toString(16); // Genera un color hexadecimal aleatorio
+            model.setAttribute('material', 'color', randomColor);
         });
     </script>
 </body>

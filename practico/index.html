@@ -25,12 +25,16 @@
     <script>
         // Seleccionamos el modelo
         const model = document.querySelector("#gltfModel");
+        let isBig = false; // Estado para alternar entre grande y pequeño
 
         // Escucha el evento de clic sobre el modelo
         model.addEventListener('click', () => {
-            // Cambia el color del modelo aleatoriamente
-            const randomColor = '#' + Math.floor(Math.random()*16777215).toString(16); // Genera un color hexadecimal aleatorio
-            model.setAttribute('material', 'color', randomColor);
+            if (isBig) {
+                model.setAttribute('scale', '0.1 0.1 0.1'); // Tamaño pequeño
+            } else {
+                model.setAttribute('scale', '0.5 0.5 0.5'); // Tamaño grande
+            }
+            isBig = !isBig; // Cambia el estado
         });
     </script>
 </body>

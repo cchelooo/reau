@@ -46,12 +46,16 @@
         // Alternar entre grande y pequeño
         function toggleScale() {
             const currentScale = model.getAttribute('scale'); // Obtiene el tamaño actual
+            const scaleX = parseFloat(currentScale.x); // Convertimos los valores de escala a números
+            const scaleY = parseFloat(currentScale.y);
+            const scaleZ = parseFloat(currentScale.z);
+
             if (isSmall) {
                 // Si es pequeño, lo agrandamos (doblamos el tamaño actual)
-                model.setAttribute('scale', `${currentScale.x * 2} ${currentScale.y * 2} ${currentScale.z * 2}`);
+                model.setAttribute('scale', `${scaleX * 2} ${scaleY * 2} ${scaleZ * 2}`);
             } else {
                 // Si es grande, lo reducimos al 50% del tamaño actual
-                model.setAttribute('scale', `${currentScale.x * 0.5} ${currentScale.y * 0.5} ${currentScale.z * 0.5}`);
+                model.setAttribute('scale', `${scaleX * 0.5} ${scaleY * 0.5} ${scaleZ * 0.5}`);
             }
             isSmall = !isSmall; // Cambia el estado de la variable para alternar
         }

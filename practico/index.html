@@ -23,18 +23,17 @@
     </a-scene>
 
     <script>
-        // Seleccionamos el modelo
+        // Seleccionamos el marcador y el modelo
+        const marker = document.querySelector("#hiroMarker");
         const model = document.querySelector("#gltfModel");
-        let isBig = false; // Estado para alternar entre grande y pequeño
 
-        // Escucha el evento de clic sobre el modelo
-        model.addEventListener('click', () => {
-            if (isBig) {
-                model.setAttribute('scale', '0.1 0.1 0.1'); // Tamaño pequeño
-            } else {
-                model.setAttribute('scale', '0.5 0.5 0.5'); // Tamaño grande
-            }
-            isBig = !isBig; // Cambia el estado
+        marker.addEventListener("markerFound", (event) => {
+            const intervalId = setInterval(() => {
+                const markerPosition = marker.object3D.position.length(); // Distancia del marcador a la cámara
+                const scaleFactor = Math.min(Math.max(markerPosition / 5, 0.1), 1); // Ajusta el tamaño según la distancia
+                model.setAttribute('scale', `${scaleFactor} ${scaleFactor} ${scaleFactor}`);
+            }, 100); // Actualiza cada 100ms
+            marker.addEventListener("markerLost", () => clearInterval(intervalId)); // Detiene cuando el marcador se pierde
         });
     </script>
 </body>

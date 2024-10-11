@@ -26,11 +26,9 @@
         // Seleccionamos el marcador y el modelo
         const marker = document.querySelector("#hiroMarker");
         const model = document.querySelector("#gltfModel");
+        let isSmall = false; // Variable para alternar entre tamaños
 
-        // Variable para alternar entre tamaños
-        let isSmall = false;
-
-        // Evento para ajustar el tamaño según la distancia
+        // Evento para ajustar el tamaño según la distancia del marcador
         marker.addEventListener("markerFound", (event) => {
             const intervalId = setInterval(() => {
                 const markerPosition = marker.object3D.position.length(); // Distancia del marcador a la cámara
@@ -40,19 +38,23 @@
             marker.addEventListener("markerLost", () => clearInterval(intervalId)); // Detiene cuando el marcador se pierde
         });
 
-        // Escuchamos el evento de clic en toda la escena
+        // Escucha el evento de clic para dispositivos táctiles y mouse
         document.addEventListener('click', () => {
-            // Alterna entre grande y pequeño (50% del tamaño actual)
+            toggleScale(); // Llama a la función para cambiar el tamaño
+        });
+
+        // Alternar entre grande y pequeño
+        function toggleScale() {
             const currentScale = model.getAttribute('scale'); // Obtiene el tamaño actual
             if (isSmall) {
-                // Regresa al tamaño original (dobla el tamaño actual)
+                // Si es pequeño, lo agrandamos (doblamos el tamaño actual)
                 model.setAttribute('scale', `${currentScale.x * 2} ${currentScale.y * 2} ${currentScale.z * 2}`);
             } else {
-                // Reduce al 50% del tamaño actual
+                // Si es grande, lo reducimos al 50% del tamaño actual
                 model.setAttribute('scale', `${currentScale.x * 0.5} ${currentScale.y * 0.5} ${currentScale.z * 0.5}`);
             }
-            isSmall = !isSmall; // Alterna el estado
-        });
+            isSmall = !isSmall; // Cambia el estado de la variable para alternar
+        }
     </script>
 </body>
 </html>

@@ -27,16 +27,26 @@
         const marker = document.querySelector("#hiroMarker");
         const model = document.querySelector("#gltfModel");
         let isSmall = false; // Variable para alternar entre tamaños
+        let isManualScaling = false; // Variable para saber si se está usando escala manual
+        let intervalId; // Para guardar el intervalo de actualización de tamaño
+
+        // Función para actualizar el tamaño según la distancia del marcador
+        function updateScaleBasedOnDistance() {
+            const markerPosition = marker.object3D.position.length(); // Distancia del marcador a la cámara
+            const scaleFactor = Math.min(Math.max(markerPosition / 5, 0.1), 1); // Ajusta el tamaño según la distancia
+            model.setAttribute('scale', `${scaleFactor} ${scaleFactor} ${scaleFactor}`);
+        }
 
         // Evento para ajustar el tamaño según la distancia del marcador
-        marker.addEventListener("markerFound", (event) => {
-            const intervalId = setInterval(() => {
-                const markerPosition = marker.object3D.position.length(); // Distancia del marcador a la cámara
-                const scaleFactor = Math.min(Math.max(markerPosition / 5, 0.1), 1); // Ajusta el tamaño según la distancia
-                model.setAttribute('scale', `${scaleFactor} ${scaleFactor} ${scaleFactor}`);
+        marker.addEventListener("markerFound", () => {
+            intervalId = setInterval(() => {
+                if (!isManualScaling) {
+                    updateScaleBasedOnDistance(); // Solo actualiza si no se está usando el tamaño manual
+                }
             }, 100); // Actualiza cada 100ms
-            marker.addEventListener("markerLost", () => clearInterval(intervalId)); // Detiene cuando el marcador se pierde
         });
+
+        marker.addEventListener("markerLost", () => clearInterval(intervalId)); // Detiene cuando el marcador se pierde
 
         // Escucha el evento de clic para dispositivos táctiles y mouse
         document.addEventListener('click', () => {
@@ -45,6 +55,7 @@
 
         // Alternar entre grande y pequeño
         function toggleScale() {
+            isManualScaling = true; // Activa el modo de escala manual
             const currentScale = model.getAttribute('scale'); // Obtiene el tamaño actual
             const scaleX = parseFloat(currentScale.x); // Convertimos los valores de escala a números
             const scaleY = parseFloat(currentScale.y);
